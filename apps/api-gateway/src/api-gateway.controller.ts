@@ -1,25 +1,13 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { ApiGatewayService } from './api-gateway.service';
+import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { Client, Transport, ClientKafka } from '@nestjs/microservices';
 
 @Controller()
 export class ApiGatewayController {
-  constructor(private readonly apiGatewayService: ApiGatewayService) {}
-  @Client({
-    transport: Transport.KAFKA,
-    options: {
-      client: {
-        brokers: ['localhost:9092'],
-      },
-      producer: {
-        allowAutoTopicCreation: true,
-      },
-    },
-  })
-  client: ClientKafka;
+  constructor(@Inject('KAFKA_CLIENT') private readonly client: ClientKafka) {}
 
   async onModuleInit() {
     this.client.subscribeToResponseOf('user_created');
+    this.client.subscribeToResponseOf('hello');
     await this.client.connect();
   }
 
@@ -29,7 +17,7 @@ export class ApiGatewayController {
   }
 
   @Get()
-  getHello(): string {
-    return this.apiGatewayService.getHello();
+  hello() {
+    return this.client.send('hello', {});
   }
 }

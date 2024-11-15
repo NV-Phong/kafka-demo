@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
+declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
@@ -14,6 +15,11 @@ async function bootstrap() {
       },
     },
   });
+
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+  }
 
   app.listen();
 }
