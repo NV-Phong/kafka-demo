@@ -13,8 +13,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
           client: {
             brokers: ['localhost:9092'],
           },
-          producer: {
-            allowAutoTopicCreation: true,
+          consumer: {
+            groupId: 'user-consumer',
           },
         },
       },
