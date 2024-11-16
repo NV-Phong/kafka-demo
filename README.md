@@ -35,6 +35,10 @@ $ npm install
 ## Compile and run the project
 
 ```bash
+$ https://github.com/obsidiandynamics/kafdrop
+```
+
+```bash
 # development
 $ npm run start
 
